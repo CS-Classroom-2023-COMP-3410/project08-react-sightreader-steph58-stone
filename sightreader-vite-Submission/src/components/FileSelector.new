@@ -1,0 +1,49 @@
+import React, { useState, useEffect } from "react";
+// import Pitchfinder from "pitchfinder";
+// import ABCJS from "abcjs";
+
+const FileSelector = ({ onFileSelect }) => {
+    const [files, setFiles] = useState([]);
+    const [selectedFile, setSelectedFile] = useState("");
+
+    useEffect(() => {
+        // Fetch available ABC files
+        const fetchFiles = async () => {
+            console.log("Hello Stephanie!");
+            try {
+                const response = await fetch("http://localhost:5173/music/beginner.pls");
+                const data = await response.value;
+                console.log("Data Length = " + data.length);
+
+                // setFiles(data);
+                // if (data.length > 0) {
+                //     setSelectedFile(data[0]);
+                //     onFileSelect(data[0]);
+                // }
+            } catch (error) {
+                console.error("Error fetching files:", error);
+            }
+        };
+        fetchFiles();
+    }, []);
+
+    const handleFileChange = (event) => {
+        const newFile = event.target.value;
+        setSelectedFile(newFile);
+        onFileSelect(newFile);
+    };
+
+    return (
+        <div>
+            <label htmlFor="file">Select File:</label>
+            <select id="file" value={selectedFile} onChange={handleFileChange}>
+                <option value="">--- Custom ABC ---</option>
+                {files.map((file) => (
+                    <option key={file} value={file}>{file}</option>
+                ))}
+            </select>
+        </div>
+    );
+};
+
+export default FileSelector;
